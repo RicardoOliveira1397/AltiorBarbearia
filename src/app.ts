@@ -41,6 +41,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private galleryTickAttached = false;
   private galleryWindow?: HTMLElement;
   private setGalleryX?: (x: number) => void;
+  private wrapGalleryX?: (x: number) => number;
   private lastGalleryX = Number.NaN;
   private overlayAnimation?: gsap.core.Timeline;
   private reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -129,7 +130,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     gsap.set(belt, { force3D: true });
     this.setGalleryX = gsap.quickSetter(belt, 'x', 'px') as (x: number) => void;
     this.lastGalleryX = Number.NaN;
-    const measure = () => { this.galleryWidth = group.getBoundingClientRect().width; this.lastGalleryX = Number.NaN; this.renderGallery(); };
+    const measure = () => {
+      this.galleryWidth = group.getBoundingClientRect().width;
+      this.wrapGalleryX = gsap.utils.wrap(-this.galleryWidth, 0);
+      this.lastGalleryX = Number.NaN;
+      this.renderGallery();
+    };
     measure();
     const observer = new ResizeObserver(measure); observer.observe(group);
     this.galleryTick = (_time, delta) => {
@@ -170,7 +176,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
   private renderGallery() {
     if (!this.galleryWidth || !this.galleryVisible || document.hidden || this.overlay) return;
-    const x = gsap.utils.wrap(-this.galleryWidth, 0, this.galleryState.x);
+    const x = this.wrapGalleryX!(this.galleryState.x);
     if (x !== this.lastGalleryX) { this.setGalleryX?.(x); this.lastGalleryX = x; }
   }
   moveGallery(direction: number) {
@@ -234,7 +240,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private disposeMotion() {
     this.galleryTween?.kill(); this.drag?.kill();
     if (this.galleryTick) gsap.ticker.remove(this.galleryTick);
-    this.galleryTickAttached = false; this.galleryVisible = false; this.setGalleryX = undefined;
+    this.galleryTickAttached = false; this.galleryVisible = false; this.setGalleryX = undefined; this.wrapGalleryX = undefined;
     this.galleryWindow?.classList.remove('is-visible');
     this.media?.revert(); this.context?.revert(); this.splits.forEach(split => split.revert()); this.splits = [];
     this.cleanup.forEach(fn => fn()); this.cleanup = [];
