@@ -25,6 +25,17 @@ Tipografia serifada editorial, verde profundo, creme e oliva. Abertura em tela c
 
 Referência analisada: https://www.era-residence.com/. Seu HTML carrega Webflow, GSAP, ScrollTrigger, SplitText, CustomEase, Lenis, Barba e Lottie. O script do site também usa Swiper. Seu Lenis é configurado com `infinite: false`. Esta implementação mantém Angular como base, usa os mesmos motores de texto e scroll e usa Draggable para a galeria contínua. Barba não é necessário em uma página Angular sem navegação entre documentos; o Angular controla os overlays. O selo e os elementos decorativos usam SVG/CSS em vez de arquivos Lottie.
 
+## Desempenho das animações
+
+- O ticker da galeria só é registrado quando ela está próxima da área visível. Pausa, hover/foco, overlays, aba oculta e saída da seção suspendem atualizações automáticas.
+- As referências do DOM e os setters do GSAP são reutilizados. A galeria usa `quickSetter`; os botões magnéticos usam `quickTo` e medem sua posição ao entrar com o ponteiro.
+- O recorte no scroll e as revelações de imagem usam camadas sólidas com `transform`, sem recalcular `clip-path` em uma fotografia grande a cada frame.
+- O tratamento de cor é aplicado nas imagens WebP durante a preparação dos arquivos. O navegador não precisa aplicar filtros de saturação nas imagens em movimento. `srcset` seleciona imagens menores quando apropriado.
+- A textura é um pequeno PNG pré-calculado, em vez de um filtro SVG em tela cheia. No celular ela é omitida. Os overlays dispensam desfoque em tempo real.
+- Os nomes do JavaScript e CSS incluem hash para evitar mistura de versões em cache depois da publicação.
+
+Ao substituir as fotos JPG de referência, execute `npm run images` para gerar as variantes WebP e a textura estática. Os quatro arquivos WebP padrão de 1280 px somam 417.440 bytes, contra 1.336.929 bytes dos JPGs originais (69% menos). Esse número compara os arquivos de imagem, não representa uma medição de FPS.
+
 ## Antes de publicar
 
 - Substituir as fotos de referência do Unsplash por fotos autorizadas da Altior.
