@@ -1,6 +1,6 @@
 # Altior Barbearia
 
-Landing page Angular com GSAP/ScrollTrigger e Lenis.
+Landing page Angular com GSAP, ScrollTrigger, SplitText, CustomEase, Draggable e Lenis.
 
 ## Executar
 
@@ -21,15 +21,17 @@ O workflow `.github/workflows/deploy-pages.yml` compila e publica automaticament
 
 ## Direção visual
 
-Tipografia editorial, carvão, creme e verde sálvia. Entrada do título, parallax fotográfico, revelações no scroll, faixa contínua e galeria horizontal fixada no desktop. No celular, a galeria permite deslizar. O sistema respeita a preferência por movimento reduzido.
+Tipografia serifada editorial, verde profundo, creme e oliva. Abertura em tela cheia com letras mascaradas, cena inicial fixada e recorte progressivo da fotografia, manifesto revelado palavra por palavra, três cenas horizontais com parallax independente, seleção de rituais com transição de imagem e galeria infinita arrastável. Menu em tela cheia, links com rolagem de texto e botões magnéticos. No celular, a narrativa vira uma sequência vertical. O sistema respeita a preferência por movimento reduzido; a galeria tem pausa e controles de teclado. O formulário mantém o foco no modal, permite fechar com Escape e restaura o foco ao botão de origem.
 
-Referência analisada: https://www.era-residence.com/. Seu HTML carrega Webflow, GSAP, ScrollTrigger, SplitText, CustomEase, Lenis, Barba e Lottie. Esta implementação usa Angular, GSAP/ScrollTrigger e Lenis; os outros recursos não são necessários para as interações implementadas.
+Referência analisada: https://www.era-residence.com/. Seu HTML carrega Webflow, GSAP, ScrollTrigger, SplitText, CustomEase, Lenis, Barba e Lottie. O script do site também usa Swiper. Seu Lenis é configurado com `infinite: false`. Esta implementação mantém Angular como base, usa os mesmos motores de texto e scroll e usa Draggable para a galeria contínua. Barba não é necessário em uma página Angular sem navegação entre documentos; o Angular controla os overlays. O selo e os elementos decorativos usam SVG/CSS em vez de arquivos Lottie.
 
 ## Antes de publicar
 
 - Substituir as fotos de referência do Unsplash por fotos autorizadas da Altior.
 - Confirmar identidade visual, textos, serviços, preços, endereço e horários com a equipe. O Instagram não pôde ser lido automaticamente.
 - O formulário prepara uma mensagem para copiar e enviar pelo Instagram. Não salva reservas nem consulta disponibilidade real. Para agenda integrada, conectar um provedor ou backend com validação de horários.
-- As fontes usam Google Fonts e as imagens são externas; para produção, considerar hospedar esses arquivos localmente.
+- As fontes usam Google Fonts. As fotografias de referência estão em `public/images` e são publicadas junto do site, sem depender de requisições de imagem ao Unsplash.
+
+Fotografias de referência: Unsplash, identificadores `photo-1503951914875-452162b0f3f1`, `photo-1621605815971-fbc98d665033`, `photo-1622287162716-f311baa1a2b8` e `photo-1599351431202-1e0f0137899a`. Essas imagens não representam instalações ou clientes da Altior.
 
 O nível visual pretendido é inspirado em sites editoriais premiados; premiação ou certificação Awwwards não é garantida.
