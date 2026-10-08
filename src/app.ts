@@ -147,7 +147,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.overlayAnimation?.kill(); if (!this.overlay) this.previousFocus = document.activeElement as HTMLElement;
     this.overlay = type; this.lenis?.stop(); document.body.style.overflow = 'hidden'; this.cd.detectChanges();
     this.zone.runOutsideAngular(() => {
-      if (!this.reduced.matches) this.overlayAnimation = gsap.timeline().fromTo('.overlay', { opacity: 0 }, { opacity: 1, duration: 0.35 }).fromTo('.overlay-panel', { yPercent: 100 }, { yPercent: 0, duration: 0.85, ease: 'altior-out' }, 0).fromTo('.menu-content nav a', { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.08, duration: 0.7 }, 0.2);
+      if (!this.reduced.matches) {
+        this.overlayAnimation = gsap.timeline().fromTo('.overlay', { opacity: 0 }, { opacity: 1, duration: 0.35 }).fromTo('.overlay-panel', { yPercent: 100 }, { yPercent: 0, duration: 0.85, ease: 'altior-out' }, 0);
+        if (type === 'menu') this.overlayAnimation.fromTo('.menu-content nav a', { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.08, duration: 0.7 }, 0.2);
+      }
     });
     this.query<HTMLButtonElement>('.overlay-close').focus();
   }
