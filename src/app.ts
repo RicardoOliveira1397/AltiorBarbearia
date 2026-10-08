@@ -21,7 +21,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   services = [
     { name: 'Corte', description: 'Forma, textura e personalidade. Feito para você.', image: 'atelier', alt: 'Acabamento de um corte masculino' },
     { name: 'Barba', description: 'Presença no desenho. Precisão no acabamento.', image: 'craft', alt: 'Barba sendo aparada com tesoura' },
-    { name: 'Corte + barba', description: 'Seu visual em harmonia. O ritual completo.', image: 'portrait', alt: 'Atendimento com atenção na cadeira do barbeiro' }
+    { name: 'Corte + barba', description: 'Seu visual em harmonia. O ritual completo.', image: 'portrait', alt: 'Atendimento com atenção na cadeira do barbeiro' },
+    { name: 'Corte infantil', description: 'Os pequenos também têm estilo. Cuidado e atenção em cada detalhe.', image: 'detail', alt: 'Tesoura, pente e instrumentos do ofício' }
   ];
   gallery = [
     { image: 'portrait', title: 'O ENCONTRO', alt: 'Atendimento com tesoura' },
