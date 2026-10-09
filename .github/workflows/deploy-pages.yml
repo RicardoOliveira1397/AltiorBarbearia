@@ -30,6 +30,8 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Install dependencies
         run: npm ci
+      - name: Validate scheduling and reports
+        run: npm test
       - name: Build Angular for the Pages URL
         env:
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}

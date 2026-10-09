@@ -1,0 +1,26 @@
+<div class="chart-heading">
+  <div>
+    <span class="eyebrow">MOVIMENTO DO PERÍODO</span>
+    <h3>O ritmo da <em>Altior.</em></h3>
+  </div>
+  <span><i></i> Concluídos</span>
+</div>
+<div class="chart" role="list" aria-label="Atendimentos concluídos por data">
+  @for(item of series(); track item.from) {
+  <div
+    class="chart-column"
+    role="listitem"
+    [attr.aria-label]="(item.from + 'T12:00:00' | date:'dd/MM') + (item.from === item.to ? '' : ' a ' + (item.to + 'T12:00:00' | date:'dd/MM')) + ': ' + item.count + ' atendimentos concluídos'"
+  >
+    <span class="bar-value">{{ item.count }}</span>
+    <div class="bar-space">
+      <div class="bar" [style.height.%]="item.height"></div>
+    </div>
+    <span class="bar-label">{{ item.from + 'T12:00:00' | date:'dd/MM' }}</span>
+  </div>
+  }
+</div>
+<p class="chart-note">
+  Somente serviços concluídos. Períodos longos são agrupados em até 14
+  intervalos.
+</p>

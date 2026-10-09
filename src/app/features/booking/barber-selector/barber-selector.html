@@ -1,0 +1,23 @@
+<div class="barber-grid" role="group" aria-label="Escolha um barbeiro">
+  @for(barber of barbers; track barber.id; let i = $index) {
+  <button
+    type="button"
+    class="barber-card"
+    [class.selected]="selected() === barber.id"
+    [attr.aria-pressed]="selected() === barber.id"
+    (click)="selectedChange.emit(barber.id)"
+  >
+    <span class="barber-top"
+      ><span>0{{ i + 1 }} / BARBEIRO</span
+      ><span class="check" aria-hidden="true"
+        >{{ selected() === barber.id ? '✓' : '+' }}</span
+      ></span
+    >
+    <span class="barber-monogram" [style.background]="barber.color"
+      >{{ barber.initials }}<span aria-hidden="true">✳</span></span
+    >
+    <span class="barber-name">{{ barber.name }}</span>
+    <span class="barber-signature">{{ barber.signature }}</span>
+  </button>
+  }
+</div>

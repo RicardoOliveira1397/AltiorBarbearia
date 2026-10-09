@@ -1,0 +1,56 @@
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+.time-grid button {
+  padding: 13px 4px;
+  border: 1px solid #1c211b40;
+  background: transparent;
+  color: var(--ink);
+  font-size: 11px;
+  min-height: 44px;
+  border-radius: 2px;
+}
+.time-grid button:not(:disabled):hover {
+  background: #dadcca;
+}
+.time-grid button.selected {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.time-grid button:disabled {
+  color: #777d70;
+  border-color: #1c211b17;
+  background: #1c211b08;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+.time-legend {
+  display: flex;
+  gap: 22px;
+  margin: 14px 0 0;
+  font-size: 9px;
+  color: #61695a;
+}
+.time-legend span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.time-legend i {
+  height: 6px;
+  width: 6px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+}
+.time-legend i.unavailable {
+  background: #b6baae;
+  border-color: #b6baae;
+}
+@media (max-width: 600px) {
+  .time-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

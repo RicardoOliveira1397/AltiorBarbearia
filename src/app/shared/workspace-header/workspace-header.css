@@ -1,0 +1,83 @@
+:host {
+  display: block;
+}
+.workspace-header {
+  height: 104px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 0 5%;
+  border-bottom: 1px solid #1c211b26;
+  color: var(--ink);
+  background: var(--paper);
+}
+.wordmark {
+  font-family: var(--serif);
+  font-size: 38px;
+  line-height: 0.8;
+  letter-spacing: -2px;
+}
+.wordmark span {
+  display: block;
+  font-family: var(--sans);
+  font-size: 7px;
+  letter-spacing: 3px;
+  margin: 10px 0 0 2px;
+}
+.workspace-header nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-left: auto;
+  font-size: 12px;
+}
+.workspace-header nav a {
+  padding: 12px 0;
+  border-bottom: 1px solid transparent;
+}
+.workspace-header nav a.active {
+  border-bottom-color: var(--ink);
+}
+nav span {
+  margin-left: 8px;
+}
+.back-link {
+  color: #626959;
+}
+.demo-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #1c211b26;
+  border-radius: 30px;
+  padding: 9px 12px;
+  font-size: 8px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.demo-badge i {
+  width: 5px;
+  height: 5px;
+  background: #77835e;
+  border-radius: 50%;
+}
+@media (max-width: 700px) {
+  .workspace-header {
+    height: 88px;
+    padding: 0 6%;
+    gap: 20px;
+  }
+  .wordmark {
+    font-size: 30px;
+  }
+  .workspace-header nav {
+    gap: 20px;
+    font-size: 11px;
+  }
+  .back-link {
+    display: none;
+  }
+  .demo-badge {
+    display: none;
+  }
+}

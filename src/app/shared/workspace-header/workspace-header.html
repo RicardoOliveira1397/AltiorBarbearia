@@ -1,0 +1,21 @@
+<header class="workspace-header">
+  <a class="wordmark" routerLink="/" aria-label="Altior — início"
+    >ALTIOR<span>BARBEARIA</span></a
+  >
+  <nav aria-label="Navegação principal">
+    <a
+      routerLink="/agendar"
+      routerLinkActive="active"
+      [attr.aria-current]="!management() ? 'page' : null"
+      >Agendar <span>↗</span></a
+    >
+    <a
+      routerLink="/gestao"
+      routerLinkActive="active"
+      [attr.aria-current]="management() ? 'page' : null"
+      >Gestão <span>↗</span></a
+    >
+    <a class="back-link" routerLink="/">Voltar ao site</a>
+  </nav>
+  <span class="demo-badge"><i></i> DEMONSTRAÇÃO</span>
+</header>

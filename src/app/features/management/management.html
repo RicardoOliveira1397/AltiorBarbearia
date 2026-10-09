@@ -1,0 +1,259 @@
+<altior-workspace-header [management]="true" />
+<div class="management-layout">
+  <aside class="management-sidebar">
+    <div class="sidebar-label">ESPAÇO DA GESTÃO</div>
+    <nav aria-label="Seções da gestão">
+      <button
+        type="button"
+        [class.active]="view() === 'overview'"
+        [attr.aria-pressed]="view() === 'overview'"
+        (click)="view.set('overview')"
+      >
+        <span>◫</span> Visão geral <span>↗</span></button
+      ><button
+        type="button"
+        [class.active]="view() === 'schedule'"
+        [attr.aria-pressed]="view() === 'schedule'"
+        (click)="view.set('schedule')"
+      >
+        <span>▤</span> Agenda <span>↗</span></button
+      ><a routerLink="/agendar"
+        ><span>＋</span> Novo agendamento <span>↗</span></a
+      >
+    </nav>
+    <div class="sidebar-team">
+      <span>TRÊS ESTILOS. O MESMO CUIDADO.</span>@for(barber of barbers; track
+      barber.id){
+      <div>
+        <i [style.background]="barber.color">{{ barber.initials }}</i
+        ><span>{{ barber.name }}<small>Profissional demonstrativo</small></span>
+      </div>
+      }
+    </div>
+    <div class="sidebar-note">
+      <span aria-hidden="true">✳</span>
+      <p>
+        Um olhar para o que acontece na cadeira.<br /><em
+          >E para o que vem depois.</em
+        >
+      </p>
+    </div>
+  </aside>
+  <main class="management-content">
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow"
+          >ALTIOR / {{ view() === 'overview' ? 'VISÃO DO NEGÓCIO' : 'AGENDA DA
+          EQUIPE' }}</span
+        >
+        <h1>
+          {{ view() === 'overview' ? 'Cada detalhe' : 'O tempo' }}
+          <em>{{ view() === 'overview' ? 'conta.' : 'bem cuidado.' }}</em>
+        </h1>
+        <p>
+          {{ view() === 'overview' ? 'O cuidado na cadeira, traduzido em uma
+          visão clara do seu negócio.' : 'Acompanhe os agendamentos e registre
+          os atendimentos da equipe.' }}
+        </p>
+      </div>
+      <a class="new-booking" routerLink="/agendar"
+        >NOVO AGENDAMENTO <span>＋</span></a
+      >
+    </div>
+    <div class="management-notice">
+      <span>DEMO</span>
+      <p>
+        Dados fictícios salvos neste navegador. Este painel é uma simulação
+        pública, sem autenticação. Os valores não representam a operação real da
+        Altior.
+      </p>
+    </div>
+    @if(!store.persistent()) {
+    <p class="feedback" role="status">
+      Armazenamento indisponível. Alterações serão mantidas apenas nesta sessão.
+    </p>
+    }
+    <section class="period-panel" aria-label="Filtros do relatório">
+      <div class="period-top">
+        <span class="eyebrow">SEU NEGÓCIO, NO SEU TEMPO</span>
+        <div class="period-presets" role="group" aria-label="Períodos rápidos">
+          <button
+            type="button"
+            [class.active]="preset() === 'today'"
+            [attr.aria-pressed]="preset() === 'today'"
+            (click)="choosePeriod('today')"
+          >
+            Hoje</button
+          ><button
+            type="button"
+            [class.active]="preset() === 'week'"
+            [attr.aria-pressed]="preset() === 'week'"
+            (click)="choosePeriod('week')"
+          >
+            7 dias</button
+          ><button
+            type="button"
+            [class.active]="preset() === 'month'"
+            [attr.aria-pressed]="preset() === 'month'"
+            (click)="choosePeriod('month')"
+          >
+            30 dias
+          </button>
+        </div>
+      </div>
+      <div class="period-fields">
+        <label
+          >De<input
+            name="from"
+            type="date"
+            [value]="from()"
+            (change)="setDate('from', $any($event.target).value)" /></label
+        ><label
+          >Até<input
+            name="to"
+            type="date"
+            [value]="to()"
+            (change)="setDate('to', $any($event.target).value)" /></label
+        ><label
+          >Barbeiro<select
+            name="barber"
+            [value]="barberId()"
+            (change)="barberId.set($any($event.target).value)"
+          >
+            <option value="">Toda a equipe</option>
+            @for(barber of barbers; track barber.id){
+            <option [value]="barber.id">{{ barber.name }}</option>
+            }
+          </select></label
+        ><label
+          >Serviço<select
+            name="service"
+            [value]="serviceId()"
+            (change)="serviceId.set($any($event.target).value)"
+          >
+            <option value="">Todos os serviços</option>
+            @for(service of services; track service.id){
+            <option [value]="service.id">{{ service.name }}</option>
+            }
+          </select></label
+        >
+      </div>
+    </section>
+    @if(!validPeriod()) {
+    <p class="feedback" role="alert">
+      Informe um período válido. A data inicial precisa ser igual ou anterior à
+      data final.
+    </p>
+    } @else {
+    <div class="period-caption">
+      <span
+        >{{ from() + 'T12:00:00' | date:'dd MMM yyyy' }} — {{ to() + 'T12:00:00'
+        | date:'dd MMM yyyy' }}</span
+      ><span>HORÁRIO DE SÃO PAULO</span>
+    </div>
+    <section class="stats-grid" aria-label="Indicadores do período">
+      <altior-stat-card
+        label="Cortes realizados"
+        [value]="summary().haircuts"
+        detail="Corte, infantil e corte + barba concluídos"
+        [featured]="true"
+      />
+      <altior-stat-card
+        label="Serviços concluídos"
+        [value]="summary().completed"
+        [detail]="summary().scheduled + ' agendados · ' + summary().cancelled + ' cancelados'"
+      />
+      <altior-stat-card
+        label="Receita demonstrativa"
+        [value]="(summary().revenue | currency:'BRL':'symbol':'1.0-0') ?? ''"
+        detail="Valores dos serviços concluídos"
+      />
+      <altior-stat-card
+        label="Ticket médio demo"
+        [value]="(summary().averageTicket | currency:'BRL') ?? ''"
+        detail="Receita dividida pelos serviços concluídos"
+      />
+    </section>
+    @if(view() === 'overview') {
+    <section class="report-grid" aria-label="Detalhamento dos serviços">
+      <altior-activity-chart
+        [appointments]="records()"
+        [from]="from()"
+        [to]="to()"
+      />
+      <article class="service-report">
+        <span class="eyebrow">QUAIS RITUAIS ACONTECERAM</span>
+        <h2>O cuidado em <em>números.</em></h2>
+        <div class="service-bars">
+          @for(service of summary().services; track service.id){
+          <div>
+            <span>{{ service.name }}<strong>{{ service.count }}</strong></span>
+            <div class="service-bar">
+              <span
+                [style.width.%]="service.count / maxServiceCount() * 100"
+              ></span>
+            </div>
+          </div>
+          }
+        </div>
+        <p>
+          Cada corte + barba conta como um atendimento e um corte. Barba avulsa
+          conta somente como serviço.
+        </p>
+      </article>
+    </section>
+    <section class="team-report" aria-label="Resultados por barbeiro">
+      <div class="team-heading">
+        <span class="eyebrow">QUEM FEZ ACONTECER</span>
+        <h2>Uma equipe. <em>Três assinaturas.</em></h2>
+      </div>
+      <div class="team-cards">
+        @for(barber of team(); track barber.id){
+        <article>
+          <span class="team-avatar" [style.background]="barber.color"
+            >{{ barber.initials }}</span
+          >
+          <div>
+            <h3>{{ barber.name }}</h3>
+            <p>
+              {{ barber.haircuts }} cortes · {{ barber.completed }} serviços
+              concluídos
+            </p>
+            <span
+              >{{ barber.revenue | currency:'BRL' }} <small>DEMO</small></span
+            >
+          </div>
+        </article>
+        }
+      </div>
+    </section>
+    } @if(message()) {
+    <p class="status-message" role="status">{{ message() }}</p>
+    }
+    <altior-appointment-table
+      [appointments]="records()"
+      (changeStatus)="changeStatus($event)"
+    />
+    }
+    <div class="demo-tools">
+      @if(confirmRestore()) {
+      <p>
+        Restaurar os dados fictícios iniciais? As simulações criadas neste
+        navegador serão substituídas.
+      </p>
+      <button type="button" (click)="restoreDemo()">
+        Restaurar demonstração</button
+      ><button type="button" (click)="confirmRestore.set(false)">Voltar</button>
+      } @else {
+      <p>Quer explorar o fluxo desde o começo?</p>
+      <button type="button" (click)="confirmRestore.set(true)">
+        Restaurar dados demonstrativos ↺
+      </button>
+      }
+    </div>
+    <footer class="management-footer">
+      <span>ALTIOR / PRECISÃO & PERSONALIDADE</span
+      ><span>AGENDA & GESTÃO DEMONSTRATIVAS</span>
+    </footer>
+  </main>
+</div>

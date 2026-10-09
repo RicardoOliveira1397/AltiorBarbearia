@@ -1,0 +1,18 @@
+<div class="time-grid" role="group" aria-label="Horários disponíveis">
+  @for(slot of slots(); track slot.time) {
+  <button
+    type="button"
+    [disabled]="!slot.available"
+    [class.selected]="selected() === slot.time"
+    [attr.aria-pressed]="selected() === slot.time"
+    [attr.aria-label]="slot.time + (slot.available ? '' : ' — indisponível')"
+    (click)="selectedChange.emit(slot.time)"
+  >
+    {{ slot.time }}
+  </button>
+  }
+</div>
+<div class="time-legend">
+  <span><i></i> Disponível</span
+  ><span><i class="unavailable"></i> Indisponível</span>
+</div>

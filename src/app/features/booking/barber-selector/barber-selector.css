@@ -1,0 +1,89 @@
+.barber-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.barber-card {
+  min-width: 0;
+  background: transparent;
+  text-align: left;
+  padding: 16px;
+  border: 1px solid #1c211b2b;
+  color: var(--ink);
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.barber-card.selected {
+  border-color: var(--ink);
+  background: #dcded0;
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.barber-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  font-size: 7px;
+  letter-spacing: 0.7px;
+}
+.check {
+  font-size: 16px;
+}
+.barber-monogram {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1.35;
+  margin: 17px 0 16px;
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: 60px;
+  letter-spacing: -3px;
+}
+.barber-monogram > span {
+  position: absolute;
+  font-size: 95px;
+  opacity: 0.12;
+  right: -16px;
+  bottom: -18px;
+}
+.barber-name {
+  font-family: var(--serif);
+  display: block;
+  font-size: 32px;
+  line-height: 1.1;
+}
+.barber-signature {
+  display: block;
+  font-size: 9px;
+  margin-top: 8px;
+  line-height: 1.5;
+  color: #5e6757;
+}
+@media (max-width: 600px) {
+  .barber-grid {
+    gap: 8px;
+  }
+  .barber-card {
+    padding: 11px;
+  }
+  .barber-top {
+    font-size: 6px;
+    letter-spacing: 0;
+  }
+  .barber-monogram {
+    font-size: 42px;
+    margin: 12px 0;
+  }
+  .barber-name {
+    font-size: 28px;
+  }
+  .barber-signature {
+    font-size: 8px;
+  }
+  .check {
+    font-size: 13px;
+  }
+}

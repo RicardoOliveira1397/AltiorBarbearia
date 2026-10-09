@@ -1,0 +1,153 @@
+<div class="table-heading">
+  <div>
+    <span class="eyebrow">TODOS OS DETALHES</span>
+    <h3>Registros do <em>período.</em></h3>
+  </div>
+  <span class="record-count">{{ filtered().length }} registros</span>
+</div>
+<div class="table-filters">
+  <div
+    class="status-tabs"
+    role="group"
+    aria-label="Filtrar registros por situação"
+  >
+    <button
+      type="button"
+      [class.active]="status() === ''"
+      [attr.aria-pressed]="status() === ''"
+      (click)="filterStatus('')"
+    >
+      Todos</button
+    >@for(item of statuses; track item){<button
+      type="button"
+      [class.active]="status() === item"
+      [attr.aria-pressed]="status() === item"
+      (click)="filterStatus(item)"
+    >
+      {{ statusLabels[item] }}s</button
+    >}
+  </div>
+  <label class="search-label"
+    ><span>Buscar cliente</span
+    ><input
+      type="search"
+      placeholder="Nome do cliente"
+      [value]="search()"
+      (input)="searchClient($any($event.target).value)"
+  /></label>
+</div>
+<div
+  class="table-scroll"
+  tabindex="0"
+  role="region"
+  aria-label="Lista de agendamentos e atendimentos"
+>
+  <table>
+    <caption class="sr-only">
+      Serviços no período selecionado. Agendados futuros podem ser cancelados;
+      atendimentos cujo horário já terminou podem ser concluídos.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">CLIENTE / SERVIÇO</th>
+        <th scope="col">BARBEIRO</th>
+        <th scope="col">DIA / HORÁRIO</th>
+        <th scope="col">VALOR DEMO</th>
+        <th scope="col">SITUAÇÃO</th>
+        <th scope="col">AÇÕES</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(item of rows(); track item.id) {
+      <tr>
+        <td>
+          <strong>{{ item.clientName }}</strong
+          ><span>{{ item.service.name }} · {{ item.duration }} min</span>
+        </td>
+        <td>
+          <span class="barber-cell"
+            ><i [style.background]="item.barber.color"
+              >{{ item.barber.initials }}</i
+            >{{ item.barber.name }}</span
+          >
+        </td>
+        <td>
+          <strong>{{ item.date + 'T12:00:00' | date:'dd/MM/yyyy' }}</strong
+          ><span>{{ item.time }}</span>
+        </td>
+        <td>{{ item.price | currency:'BRL' }}</td>
+        <td>
+          <span class="status-badge" [class]="'status-badge ' + item.status"
+            >{{ statusLabels[item.status] }}</span
+          >
+        </td>
+        <td>
+          @if(item.status === 'scheduled') { @if(pendingCancellation() ===
+          item.id) {
+          <div class="cancel-confirm">
+            <span>Cancelar?</span
+            ><button type="button" (click)="cancel(item.id)">Confirmar</button
+            ><button type="button" (click)="pendingCancellation.set('')">
+              Voltar
+            </button>
+          </div>
+          } @else {
+          <div class="row-actions">
+            <button
+              type="button"
+              [disabled]="!item.canComplete"
+              [title]="item.canComplete ? 'Registrar serviço como concluído' : 'Disponível após o término do horário agendado'"
+              (click)="changeStatus.emit({id:item.id, status:'completed'})"
+            >
+              Concluir</button
+            ><button
+              type="button"
+              class="cancel-button"
+              (click)="pendingCancellation.set(item.id)"
+            >
+              Cancelar
+            </button>
+          </div>
+          } } @else { <span class="no-action">—</span> }
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="6">
+          <div class="empty-state">
+            <span aria-hidden="true">✳</span>
+            <h4>Nenhum registro por aqui.</h4>
+            <p>
+              Experimente outro período, barbeiro, serviço ou termo de busca.
+            </p>
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+<div class="table-footer">
+  <p>
+    Conclusão disponível após o término do atendimento. Busca e situação filtram
+    apenas esta lista.
+  </p>
+  <div>
+    <button
+      type="button"
+      aria-label="Página anterior"
+      [disabled]="currentPage() === 1"
+      (click)="page.set(currentPage() - 1)"
+    >
+      ←</button
+    ><span>{{ currentPage() }} / {{ pageCount() }}</span
+    ><button
+      type="button"
+      aria-label="Próxima página"
+      [disabled]="currentPage() === pageCount()"
+      (click)="page.set(currentPage() + 1)"
+    >
+      →
+    </button>
+  </div>
+</div>
