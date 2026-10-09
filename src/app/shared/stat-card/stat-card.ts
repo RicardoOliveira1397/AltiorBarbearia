@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 @Component({
   selector: "altior-stat-card",
   template:
-    '<article [class.featured]="featured()"><span class="label">{{ label() }}</span><strong>{{ value() }}</strong><p>{{ detail() }}</p><span class="corner" aria-hidden="true">↗</span></article>',
+    '<article [class.featured]="featured()"><span class="label">{{ label() }}</span><strong [class.currency]="monetary()">{{ value() }}</strong><p>{{ detail() }}</p></article>',
   styleUrl: "./stat-card.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -12,4 +12,5 @@ export class StatCard {
   readonly value = input.required<string | number>();
   readonly detail = input.required<string>();
   readonly featured = input(false);
+  readonly monetary = input(false);
 }

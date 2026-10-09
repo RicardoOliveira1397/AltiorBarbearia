@@ -1,56 +1,64 @@
 .time-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
 }
 .time-grid button {
-  padding: 13px 4px;
-  border: 1px solid #1c211b40;
-  background: transparent;
-  color: var(--ink);
-  font-size: 11px;
-  min-height: 44px;
-  border-radius: 2px;
+  padding: 14px 4px;
+  border: 1px solid var(--ui-border);
+  background: #fafbf8;
+  color: var(--ui-ink);
+  font-size: 16px;
+  font-weight: 500;
+  min-height: 52px;
+  border-radius: 14px;
+  font-variant-numeric: tabular-nums;
 }
 .time-grid button:not(:disabled):hover {
-  background: #dadcca;
+  background: var(--ui-selected);
+  border-color: #89a078;
 }
 .time-grid button.selected {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--paper);
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
+  color: #fff;
 }
 .time-grid button:disabled {
-  color: #777d70;
-  border-color: #1c211b17;
-  background: #1c211b08;
+  color: #778371;
+  border-color: #edf0e9;
+  background: #f3f5f0;
   text-decoration: line-through;
   cursor: not-allowed;
 }
 .time-legend {
   display: flex;
-  gap: 22px;
-  margin: 14px 0 0;
-  font-size: 9px;
-  color: #61695a;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 16px 0 0;
+  font-size: 13px;
+  color: var(--ui-muted);
 }
 .time-legend span {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
 }
 .time-legend i {
-  height: 6px;
-  width: 6px;
-  border: 1px solid var(--ink);
+  height: 8px;
+  width: 8px;
+  border: 1px solid var(--ui-accent);
   border-radius: 50%;
 }
 .time-legend i.unavailable {
-  background: #b6baae;
-  border-color: #b6baae;
+  background: #b9c2b2;
+  border-color: #b9c2b2;
 }
 @media (max-width: 600px) {
   .time-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .time-grid button {
+    font-size: 15px;
   }
 }

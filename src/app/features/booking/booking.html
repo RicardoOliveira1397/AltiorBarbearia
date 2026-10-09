@@ -1,256 +1,295 @@
 <altior-workspace-header />
 <main class="booking-page">
   <aside class="booking-intro">
-    <span class="eyebrow">O SEU TEMPO. O SEU ESTILO.</span>
-    <h1>Um momento<br />à sua <em>medida.</em></h1>
-    <p>
-      Escolha seu ritual, encontre seu barbeiro e reserve um tempo para cuidar
-      de você.
-    </p>
     <div class="intro-mark" aria-hidden="true">✳</div>
-    <div class="intro-footer">
-      <span>ADULTOS & INFANTIS</span><span>ALTIOR / AGENDA</span>
-    </div>
+    <span class="eyebrow">Seu momento na Altior</span>
+    <h1>Agende seu atendimento</h1>
+    <p>
+      Escolha o serviço e o profissional. Depois, encontre o melhor horário para
+      você.
+    </p>
+    <dl class="intro-summary">
+      <div>
+        <dt>Seu serviço</dt>
+        <dd>{{ service().name }} · {{ service().duration }} min</dd>
+      </div>
+      <div>
+        <dt>Profissional</dt>
+        <dd>{{ barber()?.name ?? "Você escolhe no próximo passo" }}</dd>
+      </div>
+      @if (time()) {
+        <div>
+          <dt>Dia e horário</dt>
+          <dd>{{ date() + "T12:00:00" | date: "dd/MM" }} às {{ time() }}</dd>
+        </div>
+      }
+      <div>
+        <dt>Valor demonstrativo</dt>
+        <dd>{{ service().price | currency: "BRL" }}</dd>
+      </div>
+    </dl>
+    <div class="intro-footer"><span>Atendimento adulto e infantil</span></div>
   </aside>
   <section class="booking-content" aria-label="Agendamento demonstrativo">
     <div class="demo-note">
-      <span>✳</span>
+      <span aria-hidden="true">✳</span>
       <p>
-        Você está explorando uma
-        <strong>agenda demonstrativa.</strong> Profissionais, preços e horários
-        são ilustrativos. Use dados fictícios; nenhuma reserva real será
-        enviada.
+        <strong>Agenda demonstrativa.</strong> Use dados fictícios. Nenhum
+        agendamento real é enviado.
       </p>
     </div>
-    @if(!store.persistent()) {
-    <p class="feedback warning" role="status">
-      O navegador não permitiu salvar os dados. Esta demonstração será mantida
-      apenas enquanto a página estiver aberta.
-    </p>
-    } @if(confirmed(); as appointment) {
-    <div class="confirmation" aria-live="polite">
-      <div class="success-mark" aria-hidden="true">✓</div>
-      <span class="eyebrow">TUDO CERTO NO MOCKUP</span>
-      <h2 #stepTitle tabindex="-1">
-        Seu momento<br />está <em>reservado.</em>
-      </h2>
-      <p>
-        {{ appointment.clientName }}, seu agendamento demonstrativo já aparece
-        na área de gestão deste navegador.
+    @if (!store.persistent()) {
+      <p class="feedback warning" role="status">
+        O navegador não permitiu salvar os dados. Esta demonstração será mantida
+        apenas enquanto a página estiver aberta.
       </p>
-      <dl class="confirmation-details">
-        <div>
-          <dt>Ritual</dt>
-          <dd>{{ service().name }}</dd>
-        </div>
-        <div>
-          <dt>Profissional</dt>
-          <dd>{{ barber()?.name }}</dd>
-        </div>
-        <div>
-          <dt>Dia e horário</dt>
-          <dd>
-            {{ appointment.date + 'T12:00:00' | date:'dd/MM/yyyy' }} · {{
-            appointment.time }}
-          </dd>
-        </div>
-        <div>
-          <dt>Valor ilustrativo</dt>
-          <dd>{{ appointment.price | currency:'BRL' }}</dd>
-        </div>
-      </dl>
-      <a
-        class="primary-action"
-        routerLink="/gestao"
-        [queryParams]="{data: appointment.date}"
-        >VER NA GESTÃO <span>↗</span></a
-      >
-      <button class="text-action" type="button" (click)="startAgain()">
-        Fazer outro agendamento →
-      </button>
-      <small
-        >A simulação fica neste navegador. Para atendimento real, fale com a
-        equipe pelo
-        <a
-          href="https://www.instagram.com/altiorbarbearia/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Instagram ↗</a
-        >.</small
-      >
-    </div>
-    } @else {
-    <ol class="booking-steps" aria-label="Etapas do agendamento">
-      @for(label of ['Seu ritual', 'Dia & barbeiro', 'Seus dados']; track label;
-      let i = $index) {
-      <li
-        [class.current]="step() === i + 1"
-        [class.done]="step() > i + 1"
-        [attr.aria-current]="step() === i + 1 ? 'step' : null"
-      >
-        <span>{{ step() > i + 1 ? '✓' : '0' + (i + 1) }}</span>{{ label }}
-      </li>
-      }
-    </ol>
-    @if(step() === 1) {
-    <div class="step-heading">
-      <span class="eyebrow">01 / COMECE PELO SEU ESTILO</span>
-      <h2 #stepTitle tabindex="-1">Qual é o seu <em>ritual?</em></h2>
-      <p>Cuidado para adultos e pequenos. Escolha como quer se sentir.</p>
-    </div>
-    <div class="ritual-options" role="group" aria-label="Escolha um serviço">
-      @for(ritual of services; track ritual.id; let i = $index) {
-      <button
-        type="button"
-        class="ritual-option"
-        [class.selected]="serviceId() === ritual.id"
-        [attr.aria-pressed]="serviceId() === ritual.id"
-        (click)="selectService(ritual.id)"
-      >
-        <span class="ritual-number">0{{ i + 1 }}</span
-        ><span class="ritual-copy"
-          ><strong>{{ ritual.name }}</strong
-          ><span
-            >{{ ritual.duration }} min · {{ ritual.description }}</span
-          ></span
-        ><span class="ritual-price"
-          >{{ ritual.price | currency:'BRL':'symbol':'1.0-0' }}<span
-            aria-hidden="true"
-            >{{ serviceId() === ritual.id ? '✓' : '+' }}</span
-          ></span
-        >
-      </button>
-      }
-    </div>
-    <button type="button" class="primary-action" (click)="goToStep(2)">
-      ESCOLHER DIA E BARBEIRO <span>→</span>
-    </button>
-    } @if(step() === 2) {
-    <div class="step-heading">
-      <span class="eyebrow">02 / ENCONTRE O SEU MOMENTO</span>
-      <h2 #stepTitle tabindex="-1">Em boas <em>mãos.</em></h2>
-      <p>Três profissionais. A mesma atenção ao seu estilo.</p>
-    </div>
-    <altior-barber-selector
-      [selected]="barberId()"
-      (selectedChange)="selectBarber($event)"
-    />
-    <div class="date-heading">
-      <label for="booking-date">Em qual dia?</label
-      ><span>Seg a sáb · 09h–19h · pausa 12h–13h</span>
-    </div>
-    <input
-      id="booking-date"
-      class="date-input"
-      type="date"
-      [min]="today()"
-      [max]="maxDate()"
-      [value]="date()"
-      (change)="selectDate($any($event.target).value)"
-      aria-describedby="date-help"
-    />
-    <small id="date-help"
-      >Horários de São Paulo. Agenda aberta para os próximos 30 dias.</small
-    >
-    @if(!barberId()) {
-    <p class="empty-slots">
-      Escolha um barbeiro para ver os horários disponíveis.
-    </p>
-    } @else {
-    <div class="slots-heading">
-      <h3>Seu horário</h3>
-      <span>{{ service().duration }} minutos de cuidado</span>
-    </div>
-    <altior-time-slots
-      [slots]="slots()"
-      [selected]="time()"
-      (selectedChange)="time.set($event); error.set('')"
-    />
-    @if(!hasAvailableSlots()) {
-    <p class="empty-slots" role="status">
-      Não há horários disponíveis nessa data para este ritual. Experimente outro
-      dia ou barbeiro.
-    </p>
-    } } @if(error()) {
-    <p class="feedback" role="alert">{{ error() }}</p>
     }
-    <div class="step-actions">
-      <button class="text-action" type="button" (click)="goToStep(1)">
-        ← Voltar</button
-      ><button
-        class="primary-action"
-        type="button"
-        [disabled]="!canContinue()"
-        (click)="goToStep(3)"
-      >
-        CONTINUAR <span>→</span>
-      </button>
-    </div>
-    } @if(step() === 3) {
-    <div class="step-heading">
-      <span class="eyebrow">03 / ÚLTIMOS DETALHES</span>
-      <h2 #stepTitle tabindex="-1">Esse tempo<br />é <em>seu.</em></h2>
-      <p>Confira sua escolha e finalize a simulação.</p>
-    </div>
-    <div class="booking-summary">
-      <span
-        >{{ service().name }}
-        <strong>{{ service().price | currency:'BRL' }}</strong></span
-      ><span
-        >{{ barber()?.name }} · {{ date() + 'T12:00:00' | date:'dd/MM' }} às {{
-        time() }} · {{ service().duration }} min
-        <button type="button" (click)="goToStep(2)">Alterar</button></span
-      >
-    </div>
-    <form [formGroup]="form" (ngSubmit)="confirm()">
-      <label for="client-name"
-        >{{ serviceId() === 'infantil' ? 'Nome do responsável' : 'Seu nome'
-        }}</label
-      >
-      <input
-        id="client-name"
-        formControlName="clientName"
-        aria-required="true"
-        placeholder="Ex.: Cliente demonstração"
-        maxlength="80"
-        autocomplete="off"
-        [attr.aria-invalid]="form.controls.clientName.touched && form.controls.clientName.invalid"
-        aria-describedby="name-error"
-      />
-      <small id="name-error" class="field-error"
-        >@if(form.controls.clientName.touched &&
-        form.controls.clientName.invalid) { Informe um nome com 2 a 80
-        caracteres. }</small
-      >
-      <label for="client-phone">Telefone com DDD</label>
-      <input
-        id="client-phone"
-        formControlName="phone"
-        aria-required="true"
-        type="tel"
-        inputmode="tel"
-        placeholder="Ex.: (11) 99999-0000"
-        maxlength="20"
-        autocomplete="off"
-        [attr.aria-invalid]="form.controls.phone.touched && form.controls.phone.invalid"
-        aria-describedby="phone-error"
-      />
-      <small id="phone-error" class="field-error"
-        >@if(form.controls.phone.touched && form.controls.phone.invalid) {
-        Informe um telefone com DDD e 10 ou 11 dígitos. }</small
-      >
-      <p class="privacy-note">
-        Use dados fictícios. O mockup salva a simulação apenas neste navegador e
-        não envia mensagens.
-      </p>
-      <div class="step-actions">
-        <button class="text-action" type="button" (click)="goToStep(2)">
-          ← Voltar</button
-        ><button class="primary-action" type="submit">
-          CONFIRMAR AGENDAMENTO DEMO <span>↗</span>
+    @if (confirmed(); as appointment) {
+      <div class="confirmation" aria-live="polite">
+        <div class="success-mark" aria-hidden="true">✓</div>
+        <span class="eyebrow">Simulação concluída</span>
+        <h2 #stepTitle tabindex="-1">Agendamento confirmado</h2>
+        <p>
+          {{ appointment.clientName }}, seu agendamento demonstrativo já aparece
+          na área de gestão deste navegador.
+        </p>
+        <dl class="confirmation-details">
+          <div>
+            <dt>Ritual</dt>
+            <dd>{{ service().name }}</dd>
+          </div>
+          <div>
+            <dt>Profissional</dt>
+            <dd>{{ barber()?.name }}</dd>
+          </div>
+          <div>
+            <dt>Dia e horário</dt>
+            <dd>
+              {{ appointment.date + "T12:00:00" | date: "dd/MM/yyyy" }} ·
+              {{ appointment.time }}
+            </dd>
+          </div>
+          <div>
+            <dt>Valor ilustrativo</dt>
+            <dd>{{ appointment.price | currency: "BRL" }}</dd>
+          </div>
+        </dl>
+        <a
+          class="primary-action"
+          routerLink="/gestao"
+          [queryParams]="{ data: appointment.date }"
+          >Ver na gestão <span aria-hidden="true">↗</span></a
+        >
+        <button class="text-action" type="button" (click)="startAgain()">
+          Fazer outro agendamento →
         </button>
+        <small
+          >A simulação fica neste navegador. Para atendimento real, fale com a
+          equipe pelo
+          <a
+            href="https://www.instagram.com/altiorbarbearia/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Instagram ↗</a
+          >.</small
+        >
       </div>
-    </form>
-    } }
+    } @else {
+      <ol class="booking-steps" aria-label="Etapas do agendamento">
+        @for (
+          label of ["Serviço", "Horário", "Seus dados"];
+          track label;
+          let i = $index
+        ) {
+          <li
+            [class.current]="step() === i + 1"
+            [class.done]="step() > i + 1"
+            [attr.aria-current]="step() === i + 1 ? 'step' : null"
+          >
+            <span>{{ step() > i + 1 ? "✓" : "0" + (i + 1) }}</span
+            >{{ label }}
+          </li>
+        }
+      </ol>
+      @if (step() === 1) {
+        <div class="step-heading">
+          <span class="eyebrow">01 / COMECE PELO SEU ESTILO</span>
+          <h2 #stepTitle tabindex="-1">Escolha seu serviço</h2>
+          <p>Cuidado para adultos e pequenos. Escolha como quer se sentir.</p>
+        </div>
+        <div
+          class="ritual-options"
+          role="group"
+          aria-label="Escolha um serviço"
+        >
+          @for (ritual of services; track ritual.id) {
+            <button
+              type="button"
+              class="ritual-option"
+              [class.selected]="serviceId() === ritual.id"
+              [attr.aria-pressed]="serviceId() === ritual.id"
+              (click)="selectService(ritual.id)"
+            >
+              <span class="ritual-number" aria-hidden="true">{{
+                serviceId() === ritual.id ? "✓" : ""
+              }}</span>
+              <span class="ritual-copy"
+                ><strong>{{ ritual.name }}</strong
+                ><span
+                  >{{ ritual.duration }} min · {{ ritual.description }}</span
+                ></span
+              >
+              <span class="ritual-price">{{
+                ritual.price | currency: "BRL" : "symbol" : "1.0-0"
+              }}</span>
+            </button>
+          }
+        </div>
+        <div class="step-actions first-step-action">
+          <button type="button" class="primary-action" (click)="goToStep(2)">
+            Escolher barbeiro e horário <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      }
+      @if (step() === 2) {
+        <div class="step-heading">
+          <span class="eyebrow">02 / ENCONTRE O SEU MOMENTO</span>
+          <h2 #stepTitle tabindex="-1">Barbeiro e horário</h2>
+          <p>Três profissionais. A mesma atenção ao seu estilo.</p>
+        </div>
+        <altior-barber-selector
+          [selected]="barberId()"
+          (selectedChange)="selectBarber($event)"
+        />
+        <div class="date-heading">
+          <label for="booking-date">Em qual dia?</label
+          ><span>Seg a sáb · 09h–19h · pausa 12h–13h</span>
+        </div>
+        <input
+          id="booking-date"
+          class="date-input"
+          type="date"
+          [min]="today()"
+          [max]="maxDate()"
+          [value]="date()"
+          (change)="selectDate($any($event.target).value)"
+          aria-describedby="date-help"
+        />
+        <small id="date-help"
+          >Horários de São Paulo. Agenda aberta para os próximos 30 dias.</small
+        >
+        @if (!barberId()) {
+          <p class="empty-slots">
+            Escolha um barbeiro para ver os horários disponíveis.
+          </p>
+        } @else {
+          <div class="slots-heading">
+            <h3>Seu horário</h3>
+            <span>{{ service().duration }} minutos de cuidado</span>
+          </div>
+          <altior-time-slots
+            [slots]="slots()"
+            [selected]="time()"
+            (selectedChange)="time.set($event); error.set('')"
+          />
+          @if (!hasAvailableSlots()) {
+            <p class="empty-slots" role="status">
+              Não há horários disponíveis nessa data para este ritual.
+              Experimente outro dia ou barbeiro.
+            </p>
+          }
+        }
+        @if (error()) {
+          <p class="feedback" role="alert">{{ error() }}</p>
+        }
+        <div class="step-actions">
+          <button class="text-action" type="button" (click)="goToStep(1)">
+            ← Voltar</button
+          ><button
+            class="primary-action"
+            type="button"
+            [disabled]="!canContinue()"
+            (click)="goToStep(3)"
+          >
+            Continuar <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      }
+      @if (step() === 3) {
+        <div class="step-heading">
+          <span class="eyebrow">03 / ÚLTIMOS DETALHES</span>
+          <h2 #stepTitle tabindex="-1">Confirme seu agendamento</h2>
+          <p>Confira sua escolha e finalize a simulação.</p>
+        </div>
+        <div class="booking-summary">
+          <span
+            >{{ service().name }}
+            <strong>{{ service().price | currency: "BRL" }}</strong></span
+          ><span
+            >{{ barber()?.name }} ·
+            {{ date() + "T12:00:00" | date: "dd/MM" }} às {{ time() }} ·
+            {{ service().duration }} min
+            <button type="button" (click)="goToStep(2)">Alterar</button></span
+          >
+        </div>
+        <form [formGroup]="form" (ngSubmit)="confirm()">
+          <label for="client-name">{{
+            serviceId() === "infantil" ? "Nome do responsável" : "Seu nome"
+          }}</label>
+          <input
+            id="client-name"
+            formControlName="clientName"
+            aria-required="true"
+            placeholder="Ex.: Cliente demonstração"
+            maxlength="80"
+            autocomplete="off"
+            [attr.aria-invalid]="
+              form.controls.clientName.touched &&
+              form.controls.clientName.invalid
+            "
+            aria-describedby="name-error"
+          />
+          <small id="name-error" class="field-error">
+            @if (
+              form.controls.clientName.touched &&
+              form.controls.clientName.invalid
+            ) {
+              Informe um nome com 2 a 80 caracteres.
+            }
+          </small>
+          <label for="client-phone">Telefone com DDD</label>
+          <input
+            id="client-phone"
+            formControlName="phone"
+            aria-required="true"
+            type="tel"
+            inputmode="tel"
+            placeholder="Ex.: (11) 99999-0000"
+            maxlength="20"
+            autocomplete="off"
+            [attr.aria-invalid]="
+              form.controls.phone.touched && form.controls.phone.invalid
+            "
+            aria-describedby="phone-error"
+          />
+          <small id="phone-error" class="field-error">
+            @if (form.controls.phone.touched && form.controls.phone.invalid) {
+              Informe um telefone com DDD e 10 ou 11 dígitos.
+            }
+          </small>
+          <p class="privacy-note">
+            Use dados fictícios. O mockup salva a simulação apenas neste
+            navegador e não envia mensagens.
+          </p>
+          <div class="step-actions">
+            <button class="text-action" type="button" (click)="goToStep(2)">
+              ← Voltar</button
+            ><button class="primary-action" type="submit">
+              Confirmar reserva <span aria-hidden="true">✓</span>
+            </button>
+          </div>
+        </form>
+      }
+    }
   </section>
 </main>

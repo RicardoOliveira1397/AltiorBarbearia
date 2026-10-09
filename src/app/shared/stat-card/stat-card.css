@@ -3,66 +3,73 @@
   min-width: 0;
 }
 article {
-  position: relative;
-  padding: 26px;
-  border: 1px solid #1c211b26;
+  padding: 24px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
   height: 100%;
-  background: #efede5;
+  background: var(--ui-surface);
 }
 .label {
-  font-size: 9px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  display: block;
+  font-size: 14px;
+  color: var(--ui-muted);
+  font-weight: 500;
+  line-height: 1.45;
 }
 strong {
   display: block;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 58px;
-  letter-spacing: -2px;
-  line-height: 1.1;
-  margin: 24px 0 10px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 38px;
+  letter-spacing: -1.2px;
+  line-height: 1.2;
+  margin: 18px 0 12px;
+  font-variant-numeric: tabular-nums;
+}
+strong.currency {
+  font-size: 30px;
+  letter-spacing: -1px;
 }
 p {
-  font-size: 10px;
-  color: #666d60;
-  line-height: 1.6;
-}
-.corner {
-  position: absolute;
-  top: 22px;
-  right: 24px;
-  font-size: 19px;
-  color: #818d71;
+  font-size: 14px;
+  color: var(--ui-muted);
+  line-height: 1.5;
 }
 .featured {
-  background: var(--ink);
-  color: var(--paper);
-  border-color: var(--ink);
+  background: #e5eedf;
+  border-color: #d8e4d0;
 }
-.featured p,
-.featured .corner {
-  color: #b7bea1;
+.featured .label {
+  color: #49653e;
 }
-@media (max-width: 700px) {
+.featured strong {
+  color: #345641;
+}
+@media (max-width: 760px) {
   article {
-    padding: 20px;
-  }
-  .label {
-    font-size: 8px;
-    max-width: 85%;
-    display: block;
-    line-height: 1.5;
+    padding: 18px;
+    border-radius: 20px;
   }
   strong {
-    font-size: 43px;
-    margin: 20px 0 8px;
+    font-size: 34px;
+    margin: 16px 0 10px;
   }
-  .corner {
-    right: 16px;
-    top: 17px;
+  strong.currency {
+    font-size: 25px;
+    letter-spacing: -0.9px;
   }
   p {
-    font-size: 9px;
+    font-size: 13px;
+  }
+}
+@media (max-width: 380px) {
+  article {
+    padding: 16px;
+  }
+  strong.currency {
+    font-size: 22px;
+  }
+  .label {
+    font-size: 13px;
   }
 }

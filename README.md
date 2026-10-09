@@ -52,6 +52,7 @@ src/
     shared/
       workspace-header/           # navegação de agenda e gestão
       stat-card/                  # apresentação reutilizável de indicadores
+      workspace-theme.css         # cores, tipografia e controles das telas funcionais
 ```
 
 Componentes standalone com `OnPush`; `inject` para dependências; `signal` e `computed` para estado e derivações; inputs e outputs tipados nos componentes de apresentação; formulário reativo com validação; lógica de negócio fora dos templates. Os estilos ficam junto de seus componentes para impedir que o visual da apresentação afete o painel. O catálogo é compartilhado pela landing page e pela agenda.
@@ -59,6 +60,12 @@ Componentes standalone com `OnPush`; `inject` para dependências; `signal` e `co
 As rotas usam `loadComponent` e hash (`#/agendar`, `#/gestao`) para abrir diretamente e atualizar no GitHub Pages sem configuração de servidor. Os links antigos das seções continuam compatíveis. GSAP e Lenis ficam no carregamento da landing page; o painel não inicializa suas animações. As assinaturas de relógio são encerradas com o componente por `toSignal`; horário e ações são reavaliados a cada 30 segundos.
 
 Referências oficiais: [organização por funcionalidades](https://angular.dev/style-guide), [rotas sob demanda](https://angular.dev/best-practices/performance/lazy-loaded-routes), [signals](https://angular.dev/guide/signals), [formulários reativos](https://angular.dev/guide/forms/reactive-forms) e [hash routing](https://angular.dev/api/router/withHashLocation).
+
+## Agenda e gestão no computador e celular
+
+As telas funcionais usam superfícies claras, cartões arredondados e tipografia sem serifa. Campos usam fonte de 16 px e altura mínima de 50 px; controles principais têm áreas de toque confortáveis. Cores, foco e hierarquia de texto são compartilhados por `workspace-theme.css`, dentro das funcionalidades, preservando a direção editorial da landing page.
+
+No celular, a gestão tem navegação inferior, filtros detalhados recolhíveis com resumo das escolhas e atendimentos apresentados em cartões com cliente, serviço, profissional, horário, valor e ações. A agenda mantém as ações de avançar e confirmar acessíveis na parte inferior. No computador, o painel oferece navegação lateral e tabela; a reserva apresenta um resumo junto das etapas. Gráficos de períodos longos permitem rolagem interna, mantendo os rótulos legíveis.
 
 ## Regras dos relatórios
 

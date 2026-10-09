@@ -1,9 +1,12 @@
 <div class="table-heading">
   <div>
     <span class="eyebrow">TODOS OS DETALHES</span>
-    <h3>Registros do <em>período.</em></h3>
+    <h3>Atendimentos do período</h3>
   </div>
-  <span class="record-count">{{ filtered().length }} registros</span>
+  <span class="record-count"
+    >{{ filtered().length }}
+    {{ filtered().length === 1 ? "registro" : "registros" }}</span
+  >
 </div>
 <div class="table-filters">
   <div
@@ -17,15 +20,18 @@
       [attr.aria-pressed]="status() === ''"
       (click)="filterStatus('')"
     >
-      Todos</button
-    >@for(item of statuses; track item){<button
-      type="button"
-      [class.active]="status() === item"
-      [attr.aria-pressed]="status() === item"
-      (click)="filterStatus(item)"
-    >
-      {{ statusLabels[item] }}s</button
-    >}
+      Todos
+    </button>
+    @for (item of statuses; track item) {
+      <button
+        type="button"
+        [class.active]="status() === item"
+        [attr.aria-pressed]="status() === item"
+        (click)="filterStatus(item)"
+      >
+        {{ statusLabels[item] }}s
+      </button>
+    }
   </div>
   <label class="search-label"
     ><span>Buscar cliente</span
@@ -49,80 +55,105 @@
     </caption>
     <thead>
       <tr>
-        <th scope="col">CLIENTE / SERVIÇO</th>
-        <th scope="col">BARBEIRO</th>
-        <th scope="col">DIA / HORÁRIO</th>
-        <th scope="col">VALOR DEMO</th>
-        <th scope="col">SITUAÇÃO</th>
-        <th scope="col">AÇÕES</th>
+        <th scope="col">Cliente / serviço</th>
+        <th scope="col">Barbeiro</th>
+        <th scope="col">Dia / horário</th>
+        <th scope="col">Valor demo</th>
+        <th scope="col">Situação</th>
+        <th scope="col">Ações</th>
       </tr>
     </thead>
     <tbody>
-      @for(item of rows(); track item.id) {
-      <tr>
-        <td>
-          <strong>{{ item.clientName }}</strong
-          ><span>{{ item.service.name }} · {{ item.duration }} min</span>
-        </td>
-        <td>
-          <span class="barber-cell"
-            ><i [style.background]="item.barber.color"
-              >{{ item.barber.initials }}</i
-            >{{ item.barber.name }}</span
-          >
-        </td>
-        <td>
-          <strong>{{ item.date + 'T12:00:00' | date:'dd/MM/yyyy' }}</strong
-          ><span>{{ item.time }}</span>
-        </td>
-        <td>{{ item.price | currency:'BRL' }}</td>
-        <td>
-          <span class="status-badge" [class]="'status-badge ' + item.status"
-            >{{ statusLabels[item.status] }}</span
-          >
-        </td>
-        <td>
-          @if(item.status === 'scheduled') { @if(pendingCancellation() ===
-          item.id) {
-          <div class="cancel-confirm">
-            <span>Cancelar?</span
-            ><button type="button" (click)="cancel(item.id)">Confirmar</button
-            ><button type="button" (click)="pendingCancellation.set('')">
-              Voltar
-            </button>
-          </div>
-          } @else {
-          <div class="row-actions">
-            <button
-              type="button"
-              [disabled]="!item.canComplete"
-              [title]="item.canComplete ? 'Registrar serviço como concluído' : 'Disponível após o término do horário agendado'"
-              (click)="changeStatus.emit({id:item.id, status:'completed'})"
+      @for (item of rows(); track item.id) {
+        <tr [class.finished]="item.status !== 'scheduled'">
+          <td class="cell-client">
+            <div class="client-info">
+              <strong>{{ item.clientName }}</strong
+              ><span class="cell-detail"
+                >{{ item.service.name }} · {{ item.duration }} min</span
+              >
+            </div>
+            <span
+              class="status-badge mobile-status"
+              [class.scheduled]="item.status === 'scheduled'"
+              [class.cancelled]="item.status === 'cancelled'"
+              >{{ statusLabels[item.status] }}</span
             >
-              Concluir</button
-            ><button
-              type="button"
-              class="cancel-button"
-              (click)="pendingCancellation.set(item.id)"
+          </td>
+          <td class="cell-barber" data-label="Barbeiro">
+            <span class="barber-cell"
+              ><i [style.background]="item.barber.color">{{
+                item.barber.initials
+              }}</i
+              >{{ item.barber.name }}</span
             >
-              Cancelar
-            </button>
-          </div>
-          } } @else { <span class="no-action">—</span> }
-        </td>
-      </tr>
+          </td>
+          <td class="cell-date" data-label="Dia e horário">
+            <strong>{{ item.date + "T12:00:00" | date: "dd/MM/yyyy" }}</strong
+            ><span class="cell-detail">{{ item.time }}</span>
+          </td>
+          <td class="cell-value" data-label="Valor demo">
+            {{ item.price | currency: "BRL" }}
+          </td>
+          <td class="cell-status">
+            <span
+              class="status-badge"
+              [class]="'status-badge ' + item.status"
+              >{{ statusLabels[item.status] }}</span
+            >
+          </td>
+          <td class="cell-actions">
+            @if (item.status === "scheduled") {
+              @if (pendingCancellation() === item.id) {
+                <div class="cancel-confirm">
+                  <span>Cancelar?</span
+                  ><button type="button" (click)="cancel(item.id)">
+                    Confirmar</button
+                  ><button type="button" (click)="pendingCancellation.set('')">
+                    Voltar
+                  </button>
+                </div>
+              } @else {
+                <div class="row-actions">
+                  <button
+                    type="button"
+                    [disabled]="!item.canComplete"
+                    [title]="
+                      item.canComplete
+                        ? 'Registrar serviço como concluído'
+                        : 'Disponível após o término do horário agendado'
+                    "
+                    (click)="
+                      changeStatus.emit({ id: item.id, status: 'completed' })
+                    "
+                  >
+                    Concluir</button
+                  ><button
+                    type="button"
+                    class="cancel-button"
+                    (click)="pendingCancellation.set(item.id)"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              }
+            } @else {
+              <span class="no-action">—</span>
+            }
+          </td>
+        </tr>
       } @empty {
-      <tr>
-        <td colspan="6">
-          <div class="empty-state">
-            <span aria-hidden="true">✳</span>
-            <h4>Nenhum registro por aqui.</h4>
-            <p>
-              Experimente outro período, barbeiro, serviço ou termo de busca.
-            </p>
-          </div>
-        </td>
-      </tr>
+        <tr class="empty-row">
+          <td colspan="6">
+            <div class="empty-state">
+              <span aria-hidden="true">✳</span>
+              <h4>Nenhum registro por aqui.</h4>
+              <p>
+                Experimente outro período, barbeiro, serviço ou termo de busca.
+              </p>
+            </div>
+          </td>
+        </tr>
       }
     </tbody>
   </table>

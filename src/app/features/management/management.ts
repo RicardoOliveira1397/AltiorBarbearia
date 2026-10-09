@@ -58,8 +58,17 @@ export class Management {
   protected readonly serviceId = signal("");
   protected readonly message = signal("");
   protected readonly confirmRestore = signal(false);
+  protected readonly filtersExpanded = signal(false);
   protected readonly services = SERVICES;
   protected readonly barbers = BARBERS;
+  protected readonly filterSummary = computed(() =>
+    [
+      BARBERS.find((item) => item.id === this.barberId())?.name,
+      SERVICES.find((item) => item.id === this.serviceId())?.name,
+    ]
+      .filter(Boolean)
+      .join(" · "),
+  );
   protected readonly validPeriod = computed(
     () =>
       validDate(this.from()) &&
@@ -91,6 +100,11 @@ export class Management {
       ),
     })),
   );
+
+  protected changeView(view: "overview" | "schedule") {
+    this.view.set(view);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
 
   protected choosePeriod(preset: "today" | "week" | "month") {
     this.preset.set(preset);

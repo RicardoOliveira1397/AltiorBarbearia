@@ -1,0 +1,65 @@
+:host {
+  --ui-bg: #f4f6f1;
+  --ui-surface: #fff;
+  --ui-ink: #24332a;
+  --ui-muted: #626f64;
+  --ui-border: #e0e6dd;
+  --ui-soft: #edf2e9;
+  --ui-accent: #345641;
+  --ui-selected: #e9f2e5;
+  --ui-radius: 24px;
+  display: block;
+  min-height: 100svh;
+  background: var(--ui-bg);
+  color: var(--ui-ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--sans);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+em {
+  font-style: normal;
+  font-weight: inherit;
+}
+.eyebrow {
+  font-size: 13px;
+  color: var(--ui-muted);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+button,
+a,
+input,
+select {
+  touch-action: manipulation;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #769367;
+  outline-offset: 3px;
+}
+.feedback,
+.status-message {
+  padding: 16px 20px;
+  border-radius: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+.feedback {
+  background: #f9eae3;
+  color: #884c35;
+}
+.status-message {
+  background: var(--ui-selected);
+  color: var(--ui-accent);
+}
